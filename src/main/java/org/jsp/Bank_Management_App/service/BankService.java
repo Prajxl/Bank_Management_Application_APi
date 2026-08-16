@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import org.jsp.Bank_Management_App.dto.ResponseStrucutre;
 import org.jsp.Bank_Management_App.entity.Bank;
+import org.jsp.Bank_Management_App.exception.ContactNumberNotProper;
 import org.jsp.Bank_Management_App.exception.IdNotFoundException;
+import org.jsp.Bank_Management_App.exception.NoProperPincode;
 import org.jsp.Bank_Management_App.exception.NoRecordAvailableException;
 import org.jsp.Bank_Management_App.repository.BankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,14 @@ public class BankService {
 	// save 1 bank and adress
 	public ResponseStrucutre<Bank> saveBank(Bank bank)
 	{
+		if( String.valueOf(bank.getAddress().getPincode()).length()!=10)
+		{
+			throw new NoProperPincode("PinCode Not exaclty 6 digits");
+		}
+		if(String.valueOf(bank.getContact()).length()!=10)
+		{
+			throw new ContactNumberNotProper("ContactNumber Not exactly 10 digits");
+		}
 		ResponseStrucutre<Bank> res = new ResponseStrucutre<Bank>();
 		res.setStatusCode(HttpStatus.CREATED.value());
 		res.setMessage("Bank Record Saved Successfully");
@@ -32,13 +42,24 @@ public class BankService {
 		return res;
 	}
 	//save all bank and address
-	public ResponseStrucutre<List<Bank>> saveAllBooks(List<Bank> books)
+	public ResponseStrucutre<List<Bank>> saveAllBanks(List<Bank> banks)
 	{
-		ResponseStrucutre<List<Bank>> res = new ResponseStrucutre<>();
-		res.setStatusCode(HttpStatus.CREATED.value());
-		res.setMessage("All the Bank Details are SAved Successfully");
-		res.setData(bankRepository.saveAll(books));
-		return res;
+	    for (Bank bank : banks)
+	    {
+	        if (String.valueOf(bank.getAddress().getPincode()).length()!=6)
+	        {
+	            throw new NoProperPincode("Pincode must be exactly 6 digits");
+	        }
+	        if (String.valueOf(bank.getContact()).length()!=10)
+	        {
+	            throw new ContactNumberNotProper("Contact number must be exactly 10 digits");
+	        }
+	    }
+	    ResponseStrucutre<List<Bank>> res = new ResponseStrucutre<>();
+	    res.setStatusCode(HttpStatus.CREATED.value());
+	    res.setMessage("all the Banks saved successfully");
+	    res.setData(bankRepository.saveAll(banks));
+	    return res;
 	}
 	
 	// get all the books 
@@ -76,6 +97,13 @@ public class BankService {
 	{
 		Optional<Bank> bank = bankRepository.findById(id);
 		ResponseStrucutre<Bank> res = new ResponseStrucutre<Bank>();
+		
+		boolean accountExists = bankRepository.existsByBank_BankId(id);
+		if(accountExists)
+		{
+			throw new NoRecordAvailableException("No Active account is there in the bank");
+		}
+		
 		if(bank.isPresent())
 		{
 			bankRepository.delete(bank.get());

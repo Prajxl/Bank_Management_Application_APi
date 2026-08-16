@@ -39,7 +39,7 @@ public class BankController {
 	@PostMapping("/all")
 	public ResponseEntity<ResponseStrucutre<List<Bank>>> saveAllBank(@RequestBody List<Bank> banks)
 	{
-		return new ResponseEntity<>(bankService.saveAllBooks(banks),HttpStatus.CREATED);
+		return new ResponseEntity<>(bankService.saveAllBanks(banks),HttpStatus.CREATED);
 	}
 	
 	@GetMapping

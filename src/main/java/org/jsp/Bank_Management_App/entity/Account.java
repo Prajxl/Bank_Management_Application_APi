@@ -22,7 +22,7 @@ import lombok.Setter;
 public class Account {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int accountId;
+	private Integer accountId;
 	@Column(unique = true)
 	private String accountNumber;
 	private String accountHolderName;

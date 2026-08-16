@@ -29,9 +29,9 @@ public class Bank {
 	private String bankName;
 	@Column(unique = true)
 	private String ifsc;
-	private String branchName;
+	private String branchName;  //10 digits
 	@Column(unique = true)
-	private long contact;
+	private long contact;  // 6 digits 
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "bank",cascade = CascadeType.ALL)

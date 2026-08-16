@@ -11,4 +11,5 @@ public interface BankRepository extends JpaRepository<Bank, Integer>{
 	public Optional<Bank> findBankByAddress_AddressId(int addressId);
 	public List<Bank> findBankByAddress_City(String city);
 	public Optional<Bank> findBankByContact(long contact);
+	public boolean existsByBank_BankId(Integer bankId);
 }
