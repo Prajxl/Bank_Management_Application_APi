@@ -23,12 +23,12 @@ import lombok.Setter;
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int addressId;
+	private Integer addressId;
 	private String street;
 	private String city;
 	private String state;
 	@Column(unique = true)
-	private int pincode;
+	private Integer pincode;
 	
 	@JsonIgnore
 	@OneToOne(mappedBy = "address")
